@@ -14,23 +14,18 @@ import java.util.List;
 @Getter @Setter
 public class Order {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private Long id;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
-
-    @OneToMany(mappedBy = "order")
+    private Member member; //주문 회원
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
-
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id")
-    private Delivery delivery;
-
-    private LocalDateTime orderDate; //주문 시간
-
+    private Delivery delivery; //배송정보
+    private LocalDateTime orderDate; //주문시간
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus; //주문 상태
+    private OrderStatus status; //주문상태 [ORDER, CANCEL]
 }
